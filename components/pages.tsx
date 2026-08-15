@@ -105,7 +105,7 @@ function AboutPage({ lang }: { lang: Lang }) {
 function ExperiencePage({ lang }: { lang: Lang }) {
   return (
     <section className="experience-timeline section-shell">
-      <div className="experience-chain" data-reveal><span>{lang === "en" ? "Operational data" : "Dane operacyjne"}</span><i>→</i><span>{lang === "en" ? "Analysis" : "Analiza"}</span><i>→</i><span>{lang === "en" ? "Visualisation" : "Wizualizacja"}</span><i>→</i><span>{lang === "en" ? "Management reporting" : "Raportowanie zarządcze"}</span></div>
+      <div className="experience-chain" data-reveal><span>{lang === "en" ? "Operational data" : "Dane operacyjne"}</span><i aria-hidden="true">→</i><span>{lang === "en" ? "Analysis" : "Analiza"}</span><i aria-hidden="true">→</i><span>{lang === "en" ? "Visualisation" : "Wizualizacja"}</span><i aria-hidden="true">→</i><span>{lang === "en" ? "Management reporting" : "Raportowanie zarządcze"}</span></div>
       {experience.map((item, index) => (
         <article className={index === 0 ? "featured" : ""} key={item.company} data-reveal>
           <div className="timeline-date"><span>0{experience.length - index}</span><p>{item.dates[lang]}</p><p>{item.location[lang]}</p></div>
