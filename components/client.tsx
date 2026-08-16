@@ -61,9 +61,10 @@ export function Header({ lang, resumeHref, resumeAvailable }: { lang: Lang; resu
   useEffect(() => {
     if (!open) return;
     const header = buttonRef.current?.closest("header");
+    const navigation = header?.querySelector("nav");
     const focusable = () => [...(header?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [])]
       .filter((element) => element.getClientRects().length > 0);
-    const focusFrame = window.requestAnimationFrame(() => focusable().find((element) => element.tagName === "A")?.focus());
+    const focusFrame = window.requestAnimationFrame(() => navigation?.querySelector<HTMLElement>('a[href]')?.focus());
     const handleNavigationKeys = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
