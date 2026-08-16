@@ -1721,16 +1721,21 @@ body {
 .portfolio-v3 .hero-proofline li::before { background: #7094ff; box-shadow: 0 0 0 4px rgb(112 148 255 / .12); }
 .portfolio-v3 .hero-visual {
   position: relative;
+  display: flex;
   min-width: 0;
-  min-height: 620px;
+  min-height: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 18px;
 }
 .portfolio-v3 .hero-portrait {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 79%;
-  height: 82%;
+  position: relative;
+  width: 82%;
+  height: clamp(330px, 28vw, 410px);
   margin: 0;
+  align-self: flex-end;
+  flex: 0 0 auto;
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / .2);
   border-radius: 4px 72px 4px 4px;
@@ -1761,12 +1766,15 @@ body {
 
 /* Signature interaction: portrait-connected decision trace */
 .portfolio-v3 .hero-visual .decision-trace {
-  position: absolute;
+  position: relative;
   z-index: 4;
-  right: 8%;
-  bottom: 0;
+  right: auto;
+  bottom: auto;
   width: 92%;
   max-width: 520px;
+  margin: 0;
+  align-self: flex-start;
+  flex: 0 0 auto;
   padding: 17px;
   border: 1px solid rgb(255 255 255 / .24);
   border-radius: 21px;
@@ -2080,9 +2088,9 @@ body {
     gap: 58px;
   }
   .portfolio-v3 .hero h1 { max-width: 760px; font-size: clamp(52px, 8.6vw, 70px); }
-  .portfolio-v3 .hero-visual { width: min(680px, 100%); min-height: 620px; margin-inline: auto; }
-  .portfolio-v3 .hero-portrait { width: 76%; height: 78%; }
-  .portfolio-v3 .hero-visual .decision-trace { right: 0; width: 88%; }
+  .portfolio-v3 .hero-visual { width: min(680px, 100%); min-height: 0; margin-inline: auto; gap: 18px; }
+  .portfolio-v3 .hero-portrait { width: 76%; height: clamp(360px, 57vw, 440px); }
+  .portfolio-v3 .hero-visual .decision-trace { right: auto; width: 88%; }
   .portfolio-v3 .impact-scenarios article { min-height: 330px; }
   .portfolio-v3 .page-hero-shell { min-height: 560px; grid-template-columns: 1fr; align-content: end; gap: 64px; }
   .portfolio-v3 .page-hero-context { max-width: 430px; }
@@ -2103,10 +2111,10 @@ body {
   .portfolio-v3 .hero-context { display: grid; grid-template-columns: 1fr; gap: 14px; }
   .portfolio-v3 .hero-actions { margin-top: 27px; }
   .portfolio-v3 .hero-proofline { margin-top: 20px; }
-  .portfolio-v3 .hero-visual { min-height: 0; }
+  .portfolio-v3 .hero-visual { min-height: 0; gap: 12px; }
   .portfolio-v3 .hero-portrait { position: relative; width: 100%; height: 340px; border-radius: 3px 32px 3px 3px; }
   .portfolio-v3 .hero-portrait figcaption { display: none; }
-  .portfolio-v3 .hero-visual .decision-trace { position: relative; right: auto; bottom: auto; width: calc(100% - 8px); margin: -40px 0 0 auto; }
+  .portfolio-v3 .hero-visual .decision-trace { position: relative; right: auto; bottom: auto; width: calc(100% - 8px); margin: 0 0 0 auto; }
   .portfolio-v3 .hero-visual .trace-board { min-height: 304px; }
   .portfolio-v3 .hero-visual .trace-document { top: 18px; right: 10px; left: 30px; min-height: 166px; padding: 18px; }
   .portfolio-v3 .hero-visual .trace-document p { font-size: clamp(23px, 7vw, 27px); }
