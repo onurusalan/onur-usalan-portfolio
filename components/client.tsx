@@ -44,20 +44,49 @@ export function Header({ lang, resumeHref, resumeAvailable }: { lang: Lang; resu
   useEffect(() => {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
+    const main = document.querySelector<HTMLElement>("main");
+    const footer = document.querySelector<HTMLElement>("footer");
+    const previousMainInert = main?.inert ?? false;
+    const previousFooterInert = footer?.inert ?? false;
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = previousOverflow; };
+    if (main) main.inert = true;
+    if (footer) footer.inert = true;
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (main) main.inert = previousMainInert;
+      if (footer) footer.inert = previousFooterInert;
+    };
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
+    const header = buttonRef.current?.closest("header");
+    const focusable = () => [...(header?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [])]
+      .filter((element) => element.getClientRects().length > 0);
+    const focusFrame = window.requestAnimationFrame(() => focusable().find((element) => element.tagName === "A")?.focus());
+    const handleNavigationKeys = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
         buttonRef.current?.focus();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const elements = focusable();
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
       }
     };
-    document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
+    document.addEventListener("keydown", handleNavigationKeys);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", handleNavigationKeys);
+    };
   }, [open]);
 
   const navItems = Object.entries(routeNames) as [keyof typeof routeNames, (typeof routeNames)[keyof typeof routeNames]][];

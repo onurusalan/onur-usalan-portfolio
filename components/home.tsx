@@ -3,7 +3,7 @@ import Link from "next/link";
 import { contact, experience, localizedPath, profile, projects, siteUrl, type Lang } from "@/content/site";
 import { media } from "@/config/media";
 import { DecisionTrace } from "./media-client";
-import { CVDownload, EvidenceReel, ProfilePortrait, ProjectDashboard } from "./media";
+import { CVDownload, ProjectDashboard } from "./media";
 import { Arrow, JsonLd, SectionHeading, SiteShell } from "./shell";
 
 const capabilities = [
@@ -353,46 +353,62 @@ export function SelectedWork({ lang, showAll = false }: { lang: Lang; showAll?: 
         intro={lang === "en" ? "Two completed portfolio cases show the full route from a business question and requirements to governed evidence, UAT and a decision-ready output." : "Dwa ukończone projekty portfolio pokazują pełną drogę od pytania biznesowego i wymagań do kontrolowanych dowodów, UAT i wyniku gotowego do decyzji."}
       />
 
-      {!showAll ? (
-        <div className="reel-section">
-          <div className="reel-intro"><p className="eyebrow">{lang === "en" ? "Animated evidence reel" : "Ruchomy przegląd dowodów"}</p><p>{lang === "en" ? "A controlled sequence of real dashboard, traceability and UAT artifacts from the two repositories." : "Kontrolowana sekwencja rzeczywistych dashboardów, macierzy śledzenia i artefaktów UAT z obu repozytoriów."}</p></div>
-          <EvidenceReel lang={lang} />
-        </div>
-      ) : null}
-
-      <div className="project-list">
-        {projects.map((project, index) => (
-          <article className={`project-feature project-${index + 1}`} key={project.slug} data-reveal>
-            <header className="project-feature-head">
-              <div className="project-meta"><span>{project.index}</span><p>{project.category[lang]}</p></div>
-              <h3>{project.title[lang]}</h3>
-            </header>
-            <div className="project-feature-body">
-              <div className="project-copy">
-                <p className="project-question"><span>{lang === "en" ? "Business question" : "Pytanie biznesowe"}</span>{project.question[lang]}</p>
-                <dl className="project-proof-list">
-                  <div><dt>{lang === "en" ? "Why it matters" : "Dlaczego to ważne"}</dt><dd>{project.proof.why[lang]}</dd></div>
-                  <div><dt>{lang === "en" ? "Onur’s role" : "Rola Onura"}</dt><dd>{project.proof.role[lang]}</dd></div>
-                  <div><dt>{lang === "en" ? "Evidence / artifacts" : "Dowody / artefakty"}</dt><dd>{project.proof.evidence[lang].slice(0, 4).join(" · ")}</dd></div>
-                  <div><dt>{lang === "en" ? "Guardrail" : "Ograniczenie"}</dt><dd>{project.proof.guardrail[lang]}</dd></div>
-                </dl>
-                <div className="tag-list">{project.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
-                <div className="project-actions">
-                  <Link className="button button-primary" href={localizedPath(lang, `/projects/${project.slug}`)}>{lang === "en" ? "View case study" : "Zobacz studium przypadku"}<span aria-hidden="true">→</span></Link>
-                  <a className="text-link" href={project.repo} target="_blank" rel="noreferrer">{lang === "en" ? "Repository" : "Repozytorium"}<Arrow /></a>
+      {showAll ? (
+        <div className="project-list">
+          {projects.map((project, index) => (
+            <article className={`project-feature project-${index + 1}`} key={project.slug} data-reveal>
+              <header className="project-feature-head">
+                <div className="project-meta"><span>{project.index}</span><p>{project.category[lang]}</p></div>
+                <h3>{project.title[lang]}</h3>
+              </header>
+              <div className="project-feature-body">
+                <div className="project-copy">
+                  <p className="project-question"><span>{lang === "en" ? "Business question" : "Pytanie biznesowe"}</span>{project.question[lang]}</p>
+                  <dl className="project-proof-list">
+                    <div><dt>{lang === "en" ? "Why it matters" : "Dlaczego to ważne"}</dt><dd>{project.proof.why[lang]}</dd></div>
+                    <div><dt>{lang === "en" ? "Onur’s role" : "Rola Onura"}</dt><dd>{project.proof.role[lang]}</dd></div>
+                    <div><dt>{lang === "en" ? "Evidence / artifacts" : "Dowody / artefakty"}</dt><dd>{project.proof.evidence[lang].slice(0, 4).join(" · ")}</dd></div>
+                    <div><dt>{lang === "en" ? "Guardrail" : "Ograniczenie"}</dt><dd>{project.proof.guardrail[lang]}</dd></div>
+                  </dl>
+                  <div className="tag-list">{project.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
+                  <div className="project-actions">
+                    <Link className="button button-primary" href={localizedPath(lang, `/projects/${project.slug}`)}>{lang === "en" ? "View case study" : "Zobacz studium przypadku"}<span aria-hidden="true">→</span></Link>
+                    <a className="text-link" href={project.repo} target="_blank" rel="noreferrer">{lang === "en" ? "Repository" : "Repozytorium"}<Arrow /></a>
+                  </div>
+                </div>
+                <div className="project-visual-column">
+                  <ProjectDashboard project={project} lang={lang} />
+                  <div className="project-key-result"><span>{lang === "en" ? "Key result" : "Kluczowy wynik"}</span><p>{project.proof.keyResult[lang]}</p></div>
                 </div>
               </div>
-              <div className="project-visual-column">
-                <ProjectDashboard project={project} lang={lang} />
-                <div className="project-key-result"><span>{lang === "en" ? "Key result" : "Kluczowy wynik"}</span><p>{project.proof.keyResult[lang]}</p></div>
+              <div className="feature-metrics" aria-label={lang === "en" ? "Verified project metrics" : "Zweryfikowane wskaźniki projektu"}>
+                {project.metrics.slice(0, 4).map((metric) => <div key={metric.value}><strong>{metric.value}</strong><span>{metric.label[lang]}</span></div>)}
               </div>
-            </div>
-            <div className="feature-metrics" aria-label={lang === "en" ? "Verified project metrics" : "Zweryfikowane wskaźniki projektu"}>
-              {project.metrics.slice(0, 4).map((metric) => <div key={metric.value}><strong>{metric.value}</strong><span>{metric.label[lang]}</span></div>)}
-            </div>
-          </article>
-        ))}
-      </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="home-case-grid">
+          {projects.map((project) => (
+            <article className="home-case-card" key={project.slug} data-reveal>
+              <div className="home-case-meta"><span>{project.index}</span><p>{project.category[lang]}</p></div>
+              <h3>{project.title[lang]}</h3>
+              <ProjectDashboard project={project} lang={lang} />
+              <div className="home-case-result">
+                <span>{lang === "en" ? "Verified outcome" : "Zweryfikowany wynik"}</span>
+                <p>{project.proof.keyResult[lang]}</p>
+              </div>
+              <div className="home-case-metrics" aria-label={lang === "en" ? "Selected verified metrics" : "Wybrane zweryfikowane wskaźniki"}>
+                {project.metrics.slice(0, 2).map((metric) => <div key={metric.value}><strong>{metric.value}</strong><span>{metric.label[lang]}</span></div>)}
+              </div>
+              <div className="home-case-actions">
+                <Link className="button button-primary" href={localizedPath(lang, `/projects/${project.slug}`)}>{lang === "en" ? "Review the evidence" : "Zobacz dowody"}<span aria-hidden="true">→</span></Link>
+                <a className="text-link" href={project.repo} target="_blank" rel="noreferrer">{lang === "en" ? "Repository" : "Repozytorium"}<Arrow /></a>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
       {showAll ? <div className="project-archive-note" data-reveal><p>{lang === "en" ? "Only completed, business-facing analytical work is featured here. Smaller experiments remain on GitHub without being presented as case studies." : "Prezentowane są wyłącznie ukończone prace analityczne ukierunkowane na biznes. Mniejsze eksperymenty pozostają na GitHubie i nie są przedstawiane jako studia przypadków."}</p><a className="text-link" href={contact.github} target="_blank" rel="noreferrer">{lang === "en" ? "Complete GitHub profile" : "Pełny profil GitHub"}<Arrow /></a></div> : <Link className="section-link" href={localizedPath(lang, "/projects")}>{lang === "en" ? "Review both case studies" : "Zobacz oba studia przypadków"}<span aria-hidden="true">→</span></Link>}
     </section>
   );
@@ -428,7 +444,6 @@ function WarsawProfile({ lang }: { lang: Lang }) {
         <figcaption><span>WAW · 52°N</span><strong>{lang === "en" ? "Warsaw business context" : "Warszawski kontekst biznesowy"}</strong></figcaption>
       </figure>
       <div className="warsaw-profile-card" data-reveal>
-        <ProfilePortrait lang={lang} />
         <div className="warsaw-profile-copy">
           <p className="eyebrow">{lang === "en" ? "Warsaw base · International perspective" : "Baza w Warszawie · Perspektywa międzynarodowa"}</p>
           <h2 id="warsaw-profile-title">{lang === "en" ? "Close to Poland’s business ecosystem, prepared for international teams." : "Blisko polskiego ekosystemu biznesowego, gotowy do pracy w zespołach międzynarodowych."}</h2>
