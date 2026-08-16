@@ -1175,12 +1175,12 @@ body {
   .hero-context .hero-education { padding: 11px; }
   .decision-trace { padding: 11px; border-radius: 20px; }
   .trace-heading { margin: 2px 5px 11px; }
-  .trace-board { min-height: 475px; border-radius: 14px; background-size: 34px 34px; }
+  .trace-board { min-height: 550px; border-radius: 14px; background-size: 34px 34px; }
   .trace-board::before { left: 27px; }
   .trace-document { top: 31px; right: 14px; left: 49px; min-height: 225px; padding: 20px; }
   .trace-document p { font-size: 31px; }
   .trace-document strong { font-size: 11px; }
-  .trace-board ol { right: 14px; bottom: 20px; left: 14px; display: flex; flex-direction: column; }
+  .trace-board ol { top: 302px; right: 14px; bottom: auto; left: 14px; display: flex; flex-direction: column; }
   .trace-board li { padding: 0 0 0 33px; border-top: 0; }
   .trace-board li::before { top: 14px; left: 15px; }
   .trace-board li button { min-height: 44px; padding: 0; flex-direction: row; align-items: center; gap: 9px; }
@@ -1211,7 +1211,7 @@ body {
   .brand-copy strong { font-size: 11px; }
   .hero h1 { font-size: 43px; }
   .trace-document { left: 44px; }
-  .trace-document p { font-size: 28px; }
+  .trace-document p { font-size: clamp(23px, 7.2vw, 28px); }
   .project-feature, .project-feature:last-child { padding-inline: 16px; }
 }
 
