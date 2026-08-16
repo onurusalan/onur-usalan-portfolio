@@ -15,18 +15,39 @@ export function Header({ lang, resumeHref, resumeAvailable }: { lang: Lang; resu
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const update = () => setScrolled(window.scrollY > 12);
+    let frame = 0;
+    const update = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const available = document.documentElement.scrollHeight - window.innerHeight;
+        setScrolled(window.scrollY > 12);
+        setScrollProgress(available > 0 ? Math.min(1, Math.max(0, window.scrollY / available)) : 0);
+      });
+    };
     update();
     window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    window.addEventListener("resize", update, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
+
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -81,6 +102,7 @@ export function Header({ lang, resumeHref, resumeAvailable }: { lang: Lang; resu
           </div>
         </nav>
       </div>
+      <span className="reading-progress" aria-hidden="true" style={{ transform: `scaleX(${scrollProgress})` }} />
     </header>
   );
 }

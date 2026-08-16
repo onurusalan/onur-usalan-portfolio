@@ -34,17 +34,41 @@ export function CaseStudy({ lang, slug }: { lang: Lang; slug: string }) {
     { title: { en: "What I Learned", pl: "Czego się nauczyłem" }, body: sourceSection("What I Learned") ?? fallback("Traceability improves both analysis and communication.", "Możliwość prześledzenia usprawnia analizę i komunikację.") },
   ];
 
+  const projectUrl = `${siteUrl}${localizedPath(lang, `/projects/${project.slug}`)}`;
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    name: project.title[lang],
-    description: project.summary[lang],
-    url: `${siteUrl}${localizedPath(lang, `/projects/${project.slug}`)}`,
-    creator: { "@type": "Person", name: "Onur Usalan", url: siteUrl },
-    genre: project.category[lang],
-    keywords: project.tools.join(", "),
-    inLanguage: lang,
-    isBasedOn: project.repo,
+    "@graph": [
+      {
+        "@type": "CreativeWork",
+        "@id": `${projectUrl}#case-study`,
+        name: project.title[lang],
+        description: project.summary[lang],
+        url: projectUrl,
+        dateModified: "2026-08-16",
+        creator: { "@id": `${siteUrl}/#onur-usalan` },
+        genre: project.category[lang],
+        keywords: project.tools,
+        inLanguage: lang,
+        isBasedOn: project.repo,
+        about: project.question[lang],
+        mainEntity: { "@type": "Dataset", name: project.proof.scope[lang], description: project.proof.guardrail[lang] },
+      },
+      {
+        "@type": "Person",
+        "@id": `${siteUrl}/#onur-usalan`,
+        name: "Onur Usalan",
+        url: siteUrl,
+        sameAs: ["https://www.linkedin.com/in/onurusalan/", "https://github.com/onurusalan"],
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: lang === "en" ? "Home" : "Strona główna", item: `${siteUrl}${localizedPath(lang)}` },
+          { "@type": "ListItem", position: 2, name: lang === "en" ? "Case studies" : "Projekty", item: `${siteUrl}${localizedPath(lang, "/projects")}` },
+          { "@type": "ListItem", position: 3, name: project.title[lang], item: projectUrl },
+        ],
+      },
+    ],
   };
 
   return (

@@ -36,6 +36,7 @@ export function staticMetadata(type: StaticPageType, lang: Lang): Metadata {
   return {
     title: current.title,
     description: current.description,
+    category: "Business Analysis Portfolio",
     alternates: { canonical, languages: languageAlternates(path) },
     openGraph: { title: `${current.title} | Onur Usalan`, description: current.description, url: canonical, locale: lang === "en" ? "en_GB" : "pl_PL", type: "website" },
     twitter: { card: "summary_large_image", title: `${current.title} | Onur Usalan`, description: current.description },
@@ -50,6 +51,7 @@ export function projectMetadata(slug: string, lang: Lang): Metadata {
   return {
     title: project.title[lang],
     description: project.summary[lang],
+    category: "Business Analysis Case Study",
     alternates: { canonical, languages: languageAlternates(path) },
     openGraph: { title: `${project.title[lang]} | Onur Usalan`, description: project.summary[lang], url: `${siteUrl}${canonical}`, locale: lang === "en" ? "en_GB" : "pl_PL", type: "article" },
     twitter: { card: "summary_large_image", title: `${project.title[lang]} | Onur Usalan`, description: project.summary[lang] },

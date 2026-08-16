@@ -130,21 +130,55 @@ const companyImpact = [
   },
 ] as const;
 
+const recruiterFaq = [
+  {
+    question: { en: "What roles is Onur targeting?", pl: "Jakich ról szuka Onur?" },
+    answer: { en: "Business Analyst, Junior Business Systems Analyst and data-oriented Business Analyst roles where requirements, processes, reporting and acceptance need to stay connected.", pl: "Stanowisk Analityka Biznesowego, Junior Business Systems Analyst oraz ról Business Analyst zorientowanych na dane, w których wymagania, procesy, raportowanie i akceptacja muszą pozostać spójne." },
+  },
+  {
+    question: { en: "How can he contribute to a company?", pl: "Jak może pomóc firmie?" },
+    answer: { en: "By structuring ambiguous needs, mapping process friction, defining decision-useful KPIs, investigating data with SQL and Python, and connecting requirements to UAT and traceable acceptance evidence.", pl: "Poprzez porządkowanie niejasnych potrzeb, mapowanie problemów procesowych, definiowanie KPI użytecznych dla decyzji, analizę danych w SQL i Pythonie oraz łączenie wymagań z UAT i możliwymi do prześledzenia dowodami akceptacji." },
+  },
+  {
+    question: { en: "What evidence can a recruiter review?", pl: "Jakie dowody może zweryfikować rekruter?" },
+    answer: { en: "Two completed case studies include real dashboards, requirements, KPI definitions, data-quality controls, traceability matrices, UAT evidence and public GitHub repositories.", pl: "Dwa ukończone studia przypadków obejmują prawdziwe dashboardy, wymagania, definicje KPI, kontrole jakości danych, macierze śledzenia, dowody UAT i publiczne repozytoria GitHub." },
+  },
+  {
+    question: { en: "Where is he based and studying?", pl: "Gdzie mieszka i studiuje?" },
+    answer: { en: "Onur is based in Warsaw, Poland and is completing a Master’s in International Business at SGH Warsaw School of Economics.", pl: "Onur mieszka w Warszawie i realizuje studia magisterskie International Business w SGH Warsaw School of Economics." },
+  },
+] as const;
+
 export function HomePage({ lang }: { lang: Lang }) {
-  const structuredData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfilePage",
-      name: `${profile.name} — ${profile.role[lang]}`,
-      url: `${siteUrl}${localizedPath(lang)}`,
-      mainEntity: { "@id": `${siteUrl}/#onur-usalan` },
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "@id": `${siteUrl}/#onur-usalan`,
+  const currentUrl = `${siteUrl}${localizedPath(lang)}`;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        url: siteUrl,
+        name: "Onur Usalan — Business Analyst Portfolio",
+        inLanguage: ["en", "pl"],
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": `${currentUrl}#profile-page`,
+        name: `${profile.name} — ${profile.role[lang]}`,
+        description: profile.introduction[lang],
+        url: currentUrl,
+        isPartOf: { "@id": `${siteUrl}/#website` },
+        dateModified: "2026-08-16",
+        mainEntity: { "@id": `${siteUrl}/#onur-usalan` },
+        hasPart: projects.map((project) => ({ "@id": `${siteUrl}/projects/${project.slug}#case-study` })),
+      },
+      {
+        "@type": "Person",
+        "@id": `${siteUrl}/#onur-usalan`,
       name: profile.name,
       jobTitle: lang === "en" ? "Business Analyst" : "Analityk Biznesowy",
+      description: profile.introduction[lang],
+      image: `${siteUrl}/images/onur-headshot.jpg`,
       homeLocation: { "@type": "Place", name: "Warsaw, Poland", address: { "@type": "PostalAddress", addressLocality: "Warsaw", addressCountry: "PL" } },
       url: siteUrl,
       sameAs: [contact.linkedin, contact.github],
@@ -155,8 +189,18 @@ export function HomePage({ lang }: { lang: Lang }) {
         { "@type": "CollegeOrUniversity", name: "Bartin University" },
         { "@type": "CollegeOrUniversity", name: "Wrocław University of Science and Technology" },
       ],
-    },
-  ];
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${currentUrl}#recruiter-faq`,
+        mainEntity: recruiterFaq.map((item) => ({
+          "@type": "Question",
+          name: item.question[lang],
+          acceptedAnswer: { "@type": "Answer", text: item.answer[lang] },
+        })),
+      },
+    ],
+  };
 
   return (
     <SiteShell lang={lang}>
@@ -167,7 +211,7 @@ export function HomePage({ lang }: { lang: Lang }) {
           <p className="hero-name hero-sequence name-sequence">{profile.name}</p>
           <h1 className="hero-sequence title-sequence" aria-label={profile.headline[lang]}>
             {profile.headlineLines[lang].map((line, index) => (
-              <span className={index === profile.headlineLines[lang].length - 1 ? "hero-title-accent" : undefined} aria-hidden="true" key={line}>{line}</span>
+              <span className={index === profile.headlineLines[lang].length - 1 ? "hero-title-accent" : undefined} aria-hidden="true" key={line}>{line}{" "}</span>
             ))}
           </h1>
           <p className="hero-role hero-sequence role-sequence">{profile.role[lang]}</p>
@@ -181,6 +225,11 @@ export function HomePage({ lang }: { lang: Lang }) {
             <CVDownload lang={lang} />
             <a className="text-link quiet-link" href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn<Arrow /></a>
           </div>
+          <ul className="hero-proofline hero-sequence actions-sequence" aria-label={lang === "en" ? "Portfolio evidence" : "Dowody portfolio"}>
+            <li>{lang === "en" ? "2 documented case studies" : "2 udokumentowane studia przypadków"}</li>
+            <li>{lang === "en" ? "Real dashboards & UAT" : "Prawdziwe dashboardy i UAT"}</li>
+            <li>{lang === "en" ? "Public evidence repositories" : "Publiczne repozytoria dowodów"}</li>
+          </ul>
         </div>
         <DecisionTrace lang={lang} />
       </section>
@@ -193,6 +242,7 @@ export function HomePage({ lang }: { lang: Lang }) {
       <Leadership lang={lang} />
       <SkillSnapshot lang={lang} />
       <WarsawProfile lang={lang} />
+      <RecruiterFaq lang={lang} />
       <ContactPanel lang={lang} />
     </SiteShell>
   );
@@ -204,7 +254,7 @@ function CompanyImpact({ lang }: { lang: Lang }) {
       <SectionHeading
         eyebrow={lang === "en" ? "How I can help a company" : "Jak mogę pomóc firmie"}
         title={lang === "en" ? "Business problems become easier to solve when the work is clear, testable and traceable." : "Problemy biznesowe łatwiej rozwiązywać, gdy praca jest jasna, testowalna i możliwa do prześledzenia."}
-        intro={lang === "en" ? "This is the value I can bring to a team—not a claim that every scenario already appears as a job title on my CV." : "To wartość, którą mogę wnieść do zespołu — nie twierdzenie, że każdy scenariusz widnieje już jako stanowisko w moim CV."}
+        intro={lang === "en" ? "Four concrete ways I can contribute from discovery and process clarity to governed reporting and acceptance." : "Cztery konkretne sposoby, w jakie mogę wspierać zespół — od discovery i przejrzystości procesu po kontrolowane raportowanie i akceptację."}
       />
       <div className="impact-layout">
         <aside className="impact-thesis" data-reveal>
@@ -363,7 +413,7 @@ function Leadership({ lang }: { lang: Lang }) {
     <section className="leadership section-shell" data-reveal>
       <div><p className="eyebrow">{lang === "en" ? "Supporting evidence · leadership" : "Dowód uzupełniający · przywództwo"}</p><h2>Bartin University Blockchain Club</h2><p>{lang === "en" ? "Management Team · 2021–2024" : "Zespół zarządzający · 2021–2024"}</p></div>
       <div className="leadership-numbers"><div><strong>≈600</strong><span>{lang === "en" ? "community members" : "członków społeczności"}</span></div><div><strong>30+</strong><span>{lang === "en" ? "organised events" : "zorganizowanych wydarzeń"}</span></div></div>
-      <p className="leadership-copy">{lang === "en" ? "Not Business Analyst employment: supporting evidence of stakeholder communication, coordination, planning and responsibility alongside study." : "Nie jest to doświadczenie zawodowe Analityka Biznesowego: stanowi dodatkowy dowód komunikacji z interesariuszami, koordynacji, planowania i odpowiedzialności podczas studiów."}</p>
+      <p className="leadership-copy">{lang === "en" ? "Supporting evidence of stakeholder communication, coordination, planning and shared responsibility alongside study." : "Uzupełniający dowód komunikacji z interesariuszami, koordynacji, planowania i współodpowiedzialności podczas studiów."}</p>
     </section>
   );
 }
@@ -371,7 +421,7 @@ function Leadership({ lang }: { lang: Lang }) {
 function SkillSnapshot({ lang }: { lang: Lang }) {
   return (
     <section className="skill-snapshot section-shell">
-      <SectionHeading eyebrow={lang === "en" ? "Working toolkit" : "Warsztat pracy"} title={lang === "en" ? "Technical fluency supports the analysis." : "Biegłość techniczna wspiera analizę."} intro={lang === "en" ? "Tools are presented in the context of requirements, decision support and collaboration—not as a software-developer identity." : "Narzędzia są przedstawione w kontekście wymagań, wsparcia decyzji i współpracy — nie jako tożsamość programisty."} />
+      <SectionHeading eyebrow={lang === "en" ? "Working toolkit" : "Warsztat pracy"} title={lang === "en" ? "Technical fluency supports the analysis." : "Biegłość techniczna wspiera analizę."} intro={lang === "en" ? "A practical toolkit for validating assumptions, investigating data and communicating clearly across business and technical teams." : "Praktyczny zestaw narzędzi do weryfikowania założeń, analizy danych i jasnej współpracy między zespołami biznesowymi i technicznymi."} />
       <div className="skill-grid" data-reveal>{skills.map((group) => <article key={group.title.en}><h3>{group.title[lang]}</h3><p>{group.items.join(" · ")}</p></article>)}</div>
     </section>
   );
@@ -396,6 +446,26 @@ function WarsawProfile({ lang }: { lang: Lang }) {
           </dl>
           <div className="warsaw-profile-actions"><Link className="button button-primary" href={localizedPath(lang, "/about")}>{lang === "en" ? "View professional profile" : "Zobacz profil zawodowy"}<span aria-hidden="true">→</span></Link><a className="text-link" href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn<Arrow /></a></div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function RecruiterFaq({ lang }: { lang: Lang }) {
+  return (
+    <section className="recruiter-faq section-shell" id="recruiter-faq" aria-labelledby="recruiter-faq-title">
+      <div className="faq-intro" data-reveal>
+        <p className="eyebrow">{lang === "en" ? "Recruiter questions" : "Pytania rekrutera"}</p>
+        <h2 id="recruiter-faq-title">{lang === "en" ? "The essentials, answered directly." : "Najważniejsze informacje — bezpośrednio."}</h2>
+        <p>{lang === "en" ? "A concise, factual summary for recruiters, hiring managers and teams evaluating role fit." : "Zwięzłe i rzeczowe podsumowanie dla rekruterów, hiring managerów i zespołów oceniających dopasowanie do roli."}</p>
+      </div>
+      <div className="faq-list" data-reveal>
+        {recruiterFaq.map((item, index) => (
+          <details key={item.question.en} open={index === 0}>
+            <summary><span>{String(index + 1).padStart(2, "0")}</span>{item.question[lang]}<i aria-hidden="true" /></summary>
+            <p>{item.answer[lang]}</p>
+          </details>
+        ))}
       </div>
     </section>
   );

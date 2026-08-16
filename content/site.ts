@@ -1,7 +1,7 @@
 export type Lang = "en" | "pl";
 export type Localized = Record<Lang, string>;
 
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://onur-usalan-portfolio.vercel.app";
 
 export const contact = {
   email: "onurusalan.eth@gmail.com",

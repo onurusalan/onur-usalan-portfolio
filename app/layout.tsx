@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   description: "Warsaw-based Business Analyst turning ambiguous needs into structured requirements, understandable processes and decision-ready evidence through SQL, reporting and UAT.",
   authors: [{ name: "Onur Usalan", url: siteUrl }],
   creator: "Onur Usalan",
+  publisher: "Onur Usalan",
+  category: "Business Analysis Portfolio",
+  referrer: "origin-when-cross-origin",
+  formatDetection: { email: false, address: false, telephone: false },
   keywords: ["Onur Usalan", "Business Analyst Warsaw", "Junior Business Systems Analyst", "Requirements Elicitation", "Business Requirements", "Process Analysis", "User Stories", "Acceptance Criteria", "UAT", "Requirements Traceability", "KPI Reporting", "Data Quality", "Decision Support", "SQL", "Python", "Tableau", "Excel", "SGH Warsaw School of Economics", "Poland"],
   openGraph: {
     type: "website",
@@ -41,7 +45,11 @@ export const metadata: Metadata = {
   },
   icons: { icon: "/favicon.svg" },
   manifest: "/manifest.webmanifest",
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

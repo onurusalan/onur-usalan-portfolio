@@ -15,7 +15,7 @@ const pageHeaders: Record<StaticPageType, { eyebrow: Record<Lang, string>; title
   experience: {
     eyebrow: { en: "Experience", pl: "Doświadczenie" },
     title: { en: "Experience, shown in its real business context.", pl: "Doświadczenie pokazane w rzeczywistym kontekście biznesowym." },
-    intro: { en: "Operational data, management reporting, research and stakeholder coordination—presented without turning internships or community work into client consulting.", pl: "Dane operacyjne, raportowanie zarządcze, badania i koordynacja interesariuszy — bez przedstawiania staży lub działalności społecznościowej jako konsultingu dla klientów." },
+    intro: { en: "Operational data, management reporting, research and stakeholder coordination—each entry separates responsibilities, outputs and business relevance for fast review.", pl: "Dane operacyjne, raportowanie zarządcze, badania i koordynacja interesariuszy — każdy wpis oddziela odpowiedzialność, rezultaty i znaczenie biznesowe, ułatwiając szybką ocenę." },
   },
   projects: {
     eyebrow: { en: "Case studies", pl: "Projekty" },
@@ -122,7 +122,7 @@ function ExperiencePage({ lang }: { lang: Lang }) {
           </div>
         </article>
       ))}
-      <section className="leadership-detail" data-reveal><p className="eyebrow">{lang === "en" ? "Supporting leadership evidence" : "Uzupełniający dowód przywództwa"}</p><h2>Bartin University Blockchain Club</h2><p>{lang === "en" ? "Management Team · 2021–2024. Helped coordinate partnerships, speakers, events and project delivery for a community of approximately 600 people across 30+ organised events. This is supporting evidence of communication and responsibility—not Business Analyst employment." : "Zespół zarządzający · 2021–2024. Współkoordynowałem partnerstwa, prelegentów, wydarzenia i realizację projektów dla społeczności liczącej około 600 osób podczas ponad 30 wydarzeń. To uzupełniający dowód komunikacji i odpowiedzialności — nie doświadczenie zawodowe Analityka Biznesowego."}</p></section>
+      <section className="leadership-detail" data-reveal><p className="eyebrow">{lang === "en" ? "Supporting leadership evidence" : "Uzupełniający dowód przywództwa"}</p><h2>Bartin University Blockchain Club</h2><p>{lang === "en" ? "Management Team · 2021–2024. Coordinated partnerships, speakers, events and project delivery for a community of approximately 600 people across 30+ organised events—evidence of communication, planning and shared responsibility alongside study." : "Zespół zarządzający · 2021–2024. Koordynowałem partnerstwa, prelegentów, wydarzenia i realizację projektów dla społeczności liczącej około 600 osób podczas ponad 30 wydarzeń — to dowód komunikacji, planowania i współodpowiedzialności podczas studiów."}</p></section>
     </section>
   );
 }
