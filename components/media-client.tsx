@@ -169,6 +169,7 @@ export function DecisionTrace({ lang }: { lang: Lang }) {
   const [active, setActive] = useState(0);
   const [visible, setVisible] = useState(false);
   const [reduced, setReduced] = useState(false);
+  const [coarsePointer, setCoarsePointer] = useState(false);
   const [manuallySelected, setManuallySelected] = useState(false);
   const stages = lang === "en"
     ? [
@@ -195,6 +196,14 @@ export function DecisionTrace({ lang }: { lang: Lang }) {
   }, []);
 
   useEffect(() => {
+    const query = window.matchMedia("(pointer: coarse)");
+    const update = () => setCoarsePointer(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
     const node = rootRef.current;
     if (!node) return;
     const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.35 });
@@ -203,10 +212,10 @@ export function DecisionTrace({ lang }: { lang: Lang }) {
   }, []);
 
   useEffect(() => {
-    if (!visible || reduced || manuallySelected) return;
+    if (!visible || reduced || coarsePointer || manuallySelected) return;
     const timer = window.setInterval(() => setActive((value) => (value + 1) % stages.length), 2600);
     return () => window.clearInterval(timer);
-  }, [manuallySelected, reduced, stages.length, visible]);
+  }, [coarsePointer, manuallySelected, reduced, stages.length, visible]);
 
   function pointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (event.pointerType === "touch" || reduced) return;
@@ -219,9 +228,9 @@ export function DecisionTrace({ lang }: { lang: Lang }) {
 
   return (
     <div className="decision-trace hero-sequence lens-sequence" ref={rootRef} onPointerMove={pointerMove} onPointerLeave={(event) => { event.currentTarget.style.setProperty("--trace-x", "0px"); event.currentTarget.style.setProperty("--trace-y", "0px"); }}>
-      <div className="trace-heading"><span>Decision Trace</span><span>{lang === "en" ? "Question to recommendation" : "Od pytania do rekomendacji"}</span></div>
+      <div className="trace-heading"><span>Decision Trace</span><span>{coarsePointer ? (lang === "en" ? "Tap a stage" : "Dotknij etapu") : (lang === "en" ? "Question to recommendation" : "Od pytania do rekomendacji")}</span></div>
       <div className="trace-board">
-        <div className="trace-document">
+        <div className="trace-document" aria-live="polite">
           <span>{String(active + 1).padStart(2, "0")} / 05</span>
           <p>{stages[active][0]}</p>
           <strong>{stages[active][1]}</strong>

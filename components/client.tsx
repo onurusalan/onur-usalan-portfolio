@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { contact, localizedPath, routeNames, type Lang } from "@/content/site";
@@ -62,13 +61,24 @@ export function Header({ lang, resumeHref, resumeAvailable }: { lang: Lang; resu
   }, [open]);
 
   const navItems = Object.entries(routeNames) as [keyof typeof routeNames, (typeof routeNames)[keyof typeof routeNames]][];
+  const navDescriptions = {
+    about: { en: "Profile, approach and education", pl: "Profil, podejście i wykształcenie" },
+    experience: { en: "Work shown in business context", pl: "Praca w kontekście biznesowym" },
+    projects: { en: "Reviewable analytical evidence", pl: "Weryfikowalne dowody analityczne" },
+    contact: { en: "Start a professional conversation", pl: "Rozpocznij rozmowę zawodową" },
+  } as const;
   return (
     <header className={`site-header${scrolled ? " is-scrolled" : ""}`}>
       <div className="header-inner">
-        <Link className="brand" href={localizedPath(lang)} aria-label="Onur Usalan — home" onClick={() => setOpen(false)}>
+        <a className="brand" href={localizedPath(lang)} aria-label="Onur Usalan — home" onClick={() => setOpen(false)}>
           <span className="monogram" aria-hidden="true">OU</span>
           <span className="brand-copy"><strong>Onur Usalan</strong><small>Warsaw · Business Analysis</small></span>
-        </Link>
+        </a>
+
+        <div className="header-status" aria-label={lang === "en" ? "Based in Warsaw and open to analyst opportunities" : "Mieszka w Warszawie i jest otwarty na role analityczne"}>
+          <i aria-hidden="true" />
+          <span>{lang === "en" ? "Warsaw · Open to analyst roles" : "Warszawa · Otwarty na role analityczne"}</span>
+        </div>
 
         <button
           ref={buttonRef}
@@ -88,17 +98,19 @@ export function Header({ lang, resumeHref, resumeAvailable }: { lang: Lang; resu
             {navItems.flatMap(([route, label]) => {
               const href = localizedPath(lang, `/${route}`);
               const active = pathname === href || (route === "projects" && pathname.startsWith(`${href}/`));
-              const item = <Link key={route} href={href} aria-current={active ? "page" : undefined} onClick={() => setOpen(false)}>{label[lang]}</Link>;
+              const item = <a key={route} href={href} aria-label={label[lang]} aria-current={active ? "page" : undefined} onClick={() => setOpen(false)}><span>{label[lang]}</span><small aria-hidden="true">{navDescriptions[route][lang]}</small></a>;
               if (route !== "experience") return [item];
-              return [item, <Link key="services" href={`${localizedPath(lang)}#company-impact`} onClick={() => setOpen(false)}>{lang === "en" ? "How I help" : "Jak pomagam"}</Link>];
+              return [item, <a key="services" href={`${localizedPath(lang)}#company-impact`} aria-label={lang === "en" ? "How I help" : "Jak pomagam"} onClick={() => setOpen(false)}><span>{lang === "en" ? "How I help" : "Jak pomagam"}</span><small aria-hidden="true">{lang === "en" ? "Problems I can help structure" : "Problemy, które mogę uporządkować"}</small></a>];
             })}
           </div>
           <div className="nav-utility">
-            <Link className="language-link" href={languageDestination(pathname, lang)} aria-label={lang === "en" ? "Przejdź do wersji polskiej" : "Switch to English"} onClick={() => setOpen(false)}>
-              <span className={lang === "en" ? "active" : ""}>EN</span><i>/</i><span className={lang === "pl" ? "active" : ""}>PL</span>
-            </Link>
-            <a href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-            <a className="resume-link" href={resumeHref} download={resumeAvailable || undefined} onClick={() => setOpen(false)}>{resumeAvailable ? (lang === "en" ? "Download CV" : "Pobierz CV") : (lang === "en" ? "Request CV" : "Poproś o CV")}</a>
+            <div className="language-switch" aria-label={lang === "en" ? "Language selection" : "Wybór języka"}>
+              <span aria-current="true">{lang.toUpperCase()}</span>
+              <a href={languageDestination(pathname, lang)} onClick={() => setOpen(false)} aria-label={lang === "en" ? "Przejdź do wersji polskiej" : "Switch to English"}>{lang === "en" ? "PL" : "EN"}</a>
+            </div>
+            <a className="header-linkedin" href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+            <a className="header-contact" href={localizedPath(lang, "/contact")} onClick={() => setOpen(false)}>{lang === "en" ? "Let’s talk" : "Porozmawiajmy"}<span aria-hidden="true">↗</span></a>
+            <a className="header-resume" href={resumeHref} download={resumeAvailable || undefined} onClick={() => setOpen(false)}>{resumeAvailable ? (lang === "en" ? "Download CV" : "Pobierz CV") : (lang === "en" ? "Request CV" : "Poproś o CV")}</a>
           </div>
         </nav>
       </div>

@@ -31,12 +31,27 @@ const pageHeaders: Record<StaticPageType, { eyebrow: Record<Lang, string>; title
 
 export function StaticPage({ lang, type }: { lang: Lang; type: StaticPageType }) {
   const header = pageHeaders[type];
+  const pageContext = {
+    about: { en: "Professional profile", pl: "Profil zawodowy" },
+    experience: { en: "Evidence in context", pl: "Dowody w kontekście" },
+    projects: { en: "Analytical casebook", pl: "Casebook analityczny" },
+    contact: { en: "Professional contact", pl: "Kontakt zawodowy" },
+  } as const;
   return (
     <SiteShell lang={lang}>
-      <section className="page-hero section-shell">
-        <p className="eyebrow">{header.eyebrow[lang]}</p>
-        <h1>{header.title[lang]}</h1>
-        <p>{header.intro[lang]}</p>
+      <section className={`page-hero page-hero-${type}`}>
+        <div className="page-hero-shell section-shell">
+          <div className="page-hero-copy">
+            <p className="eyebrow">{header.eyebrow[lang]}</p>
+            <h1>{header.title[lang]}</h1>
+            <p>{header.intro[lang]}</p>
+          </div>
+          <aside className="page-hero-context" aria-label={lang === "en" ? "Page context" : "Kontekst strony"}>
+            <span>{pageContext[type][lang]}</span>
+            <strong>Onur Usalan</strong>
+            <p>Warsaw · SGH · Business Analysis</p>
+          </aside>
+        </div>
       </section>
       {type === "about" ? <AboutPage lang={lang} /> : null}
       {type === "experience" ? <ExperiencePage lang={lang} /> : null}

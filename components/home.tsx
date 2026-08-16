@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { contact, experience, localizedPath, profile, projects, siteUrl, skills, type Lang } from "@/content/site";
+import { contact, experience, localizedPath, profile, projects, siteUrl, type Lang } from "@/content/site";
 import { media } from "@/config/media";
 import { DecisionTrace } from "./media-client";
 import { CVDownload, EvidenceReel, ProfilePortrait, ProjectDashboard } from "./media";
@@ -231,7 +231,19 @@ export function HomePage({ lang }: { lang: Lang }) {
             <li>{lang === "en" ? "Public evidence repositories" : "Publiczne repozytoria dowodów"}</li>
           </ul>
         </div>
-        <DecisionTrace lang={lang} />
+        <div className="hero-visual hero-sequence lens-sequence">
+          <figure className="hero-portrait">
+            <Image
+              src={media.headshot ?? "/images/onur-headshot.jpg"}
+              fill
+              priority
+              sizes="(max-width: 880px) 100vw, 42vw"
+              alt={lang === "en" ? "Onur Usalan, Business Analyst based in Warsaw" : "Onur Usalan, Analityk Biznesowy mieszkający w Warszawie"}
+            />
+            <figcaption><span>WAW · 52°N</span><strong>{lang === "en" ? "Business analysis from Warsaw" : "Analiza biznesowa z Warszawy"}</strong></figcaption>
+          </figure>
+          <DecisionTrace lang={lang} />
+        </div>
       </section>
 
       <RecruiterSnapshot lang={lang} />
@@ -239,8 +251,6 @@ export function HomePage({ lang }: { lang: Lang }) {
       <Capabilities lang={lang} />
       <SelectedWork lang={lang} />
       <ExperienceProof lang={lang} />
-      <Leadership lang={lang} />
-      <SkillSnapshot lang={lang} />
       <WarsawProfile lang={lang} />
       <RecruiterFaq lang={lang} />
       <ContactPanel lang={lang} />
@@ -267,7 +277,7 @@ function CompanyImpact({ lang }: { lang: Lang }) {
           </dl>
           <Link className="button button-light" href={localizedPath(lang, "/contact")}>{lang === "en" ? "Discuss a business problem" : "Porozmawiaj o problemie biznesowym"}<span aria-hidden="true">→</span></Link>
         </aside>
-        <div className="impact-scenarios">
+        <div className="impact-scenarios" tabIndex={0} aria-label={lang === "en" ? "Swipeable business situations" : "Przewijane sytuacje biznesowe"}>
           {companyImpact.map((item) => (
             <article key={item.title.en} data-reveal>
               <header><span>{lang === "en" ? "Business situation" : "Sytuacja biznesowa"}</span><p>{item.signal[lang]}</p></header>
@@ -279,6 +289,7 @@ function CompanyImpact({ lang }: { lang: Lang }) {
           ))}
         </div>
       </div>
+      <p className="mobile-swipe-cue">{lang === "en" ? "Swipe to review business situations →" : "Przesuń, aby zobaczyć sytuacje biznesowe →"}</p>
     </section>
   );
 }
@@ -316,7 +327,7 @@ function Capabilities({ lang }: { lang: Lang }) {
           title={lang === "en" ? "The analytical methods behind the business outcome." : "Metody analityczne stojące za wynikiem biznesowym."}
           intro={lang === "en" ? "The emphasis is not on a long tool list. It is on the requirements, process, evidence and validation work those tools make possible." : "Najważniejsza nie jest długa lista narzędzi, lecz praca nad wymaganiami, procesem, dowodami i walidacją, którą te narzędzia umożliwiają."}
         />
-        <div className="solutions-grid">
+        <div className="solutions-grid" tabIndex={0} aria-label={lang === "en" ? "Swipeable analytical toolkit" : "Przewijany warsztat analityczny"}>
           {capabilities.map((capability) => (
             <article key={capability.title.en} data-reveal>
               <div><span aria-hidden="true">—</span><i aria-hidden="true">↗</i></div>
@@ -326,6 +337,7 @@ function Capabilities({ lang }: { lang: Lang }) {
             </article>
           ))}
         </div>
+        <p className="mobile-swipe-cue">{lang === "en" ? "Swipe to explore the toolkit →" : "Przesuń, aby poznać warsztat →"}</p>
         <div className="solutions-cta" data-reveal><p>{lang === "en" ? "Looking for an analyst who can connect business context with evidence?" : "Szukasz analityka, który łączy kontekst biznesowy z dowodami?"}</p><Link className="button button-primary" href={localizedPath(lang, "/contact")}>{lang === "en" ? "Discuss an analyst opportunity" : "Porozmawiaj o roli analityka"}<span aria-hidden="true">→</span></Link></div>
       </div>
     </section>
@@ -404,25 +416,6 @@ function ExperienceProof({ lang }: { lang: Lang }) {
           <Link className="text-link" href={localizedPath(lang, "/experience")}>{lang === "en" ? "Review experience in context" : "Zobacz doświadczenie w kontekście"}<span className="arrow" aria-hidden="true">→</span></Link>
         </article>
       </div>
-    </section>
-  );
-}
-
-function Leadership({ lang }: { lang: Lang }) {
-  return (
-    <section className="leadership section-shell" data-reveal>
-      <div><p className="eyebrow">{lang === "en" ? "Supporting evidence · leadership" : "Dowód uzupełniający · przywództwo"}</p><h2>Bartin University Blockchain Club</h2><p>{lang === "en" ? "Management Team · 2021–2024" : "Zespół zarządzający · 2021–2024"}</p></div>
-      <div className="leadership-numbers"><div><strong>≈600</strong><span>{lang === "en" ? "community members" : "członków społeczności"}</span></div><div><strong>30+</strong><span>{lang === "en" ? "organised events" : "zorganizowanych wydarzeń"}</span></div></div>
-      <p className="leadership-copy">{lang === "en" ? "Supporting evidence of stakeholder communication, coordination, planning and shared responsibility alongside study." : "Uzupełniający dowód komunikacji z interesariuszami, koordynacji, planowania i współodpowiedzialności podczas studiów."}</p>
-    </section>
-  );
-}
-
-function SkillSnapshot({ lang }: { lang: Lang }) {
-  return (
-    <section className="skill-snapshot section-shell">
-      <SectionHeading eyebrow={lang === "en" ? "Working toolkit" : "Warsztat pracy"} title={lang === "en" ? "Technical fluency supports the analysis." : "Biegłość techniczna wspiera analizę."} intro={lang === "en" ? "A practical toolkit for validating assumptions, investigating data and communicating clearly across business and technical teams." : "Praktyczny zestaw narzędzi do weryfikowania założeń, analizy danych i jasnej współpracy między zespołami biznesowymi i technicznymi."} />
-      <div className="skill-grid" data-reveal>{skills.map((group) => <article key={group.title.en}><h3>{group.title[lang]}</h3><p>{group.items.join(" · ")}</p></article>)}</div>
     </section>
   );
 }
